@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Age Counter Tile</title>
+    <title>GitHub Pixel Age Counter</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,6 +13,7 @@
             --highlight: #58a6ff;
             --border-color: #30363d;
             --pixel-size: 4px;
+            --glow-color: rgba(88, 166, 255, 0.3);
         }
 
         * {
@@ -30,19 +31,59 @@
             font-family: 'Press Start 2P', system-ui, sans-serif;
             color: var(--text-color);
             padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(88, 166, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(210, 168, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 32px;
+            color: var(--highlight);
+            text-shadow: 0 0 10px var(--glow-color);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--highlight), transparent);
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 10px;
+            color: #79c0ff;
         }
 
         .age-tile {
             background-color: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(1, 4, 9, 0.5);
-            padding: 25px;
-            max-width: 700px;
-            width: 100%;
-            text-align: center;
+            border: 3px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(1, 4, 9, 0.6);
+            padding: 30px;
+            margin: 0 auto 30px;
             position: relative;
             overflow: hidden;
+            max-width: 600px;
         }
 
         .age-tile::before {
@@ -51,51 +92,41 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
+            height: 5px;
             background: linear-gradient(90deg, #ff7b72, #d2a8ff, #79c0ff, #a5d6ff);
             z-index: 10;
         }
 
-        .tile-header {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .tile-title {
-            font-size: 22px;
-            color: var(--highlight);
-            margin-bottom: 10px;
-            text-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
-        }
-
-        .birthdate-display {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
-
         .age-display {
-            font-size: 18px;
-            line-height: 1.8;
-            padding: 20px 15px;
-            background: rgba(22, 27, 34, 0.7);
+            font-size: 20px;
+            line-height: 2.2;
+            padding: 30px 20px;
+            background: rgba(13, 17, 23, 0.5);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin: 20px 0;
+            border-radius: 6px;
+            margin: 25px 0;
             position: relative;
+            text-shadow: 0 0 5px rgba(201, 209, 217, 0.2);
         }
 
         .age-value {
             color: var(--highlight);
             display: inline-block;
-            min-width: 40px;
+            min-width: 50px;
             text-align: center;
+            text-shadow: 0 0 8px var(--glow-color);
+            position: relative;
+            z-index: 2;
         }
 
-        .tile-footer {
-            margin-top: 25px;
-            font-size: 12px;
-            opacity: 0.7;
+        .birthdate-display {
+            font-size: 16px;
+            color: #79c0ff;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(22, 27, 34, 0.7);
+            border-radius: 6px;
+            display: inline-block;
         }
 
         .pixel-decoration {
@@ -103,12 +134,14 @@
             width: var(--pixel-size);
             height: var(--pixel-size);
             background-color: var(--highlight);
+            box-shadow: 0 0 5px var(--glow-color);
+            z-index: 1;
         }
 
-        .pixel-top-left { top: 15px; left: 15px; }
-        .pixel-top-right { top: 15px; right: 15px; }
-        .pixel-bottom-left { bottom: 15px; left: 15px; }
-        .pixel-bottom-right { bottom: 15px; right: 15px; }
+        .pixel-top-left { top: 20px; left: 20px; }
+        .pixel-top-right { top: 20px; right: 20px; }
+        .pixel-bottom-left { bottom: 20px; left: 20px; }
+        .pixel-bottom-right { bottom: 20px; right: 20px; }
 
         .loading {
             animation: blink 1.5s infinite;
@@ -117,11 +150,82 @@
         .error {
             color: #ff7b72;
             background: rgba(255, 123, 114, 0.1);
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
-            margin: 20px 0;
+            margin: 30px 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .instructions {
+            background: rgba(22, 27, 34, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
             font-size: 14px;
-            line-height: 1.5;
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .instructions h3 {
+            color: var(--highlight);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .instructions code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 2px 0;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .pixel-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(88, 166, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(88, 166, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0;
+        }
+
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .counter-cell {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .counter-value {
+            font-size: 28px;
+            color: var(--highlight);
+            margin: 10px 0;
+            text-shadow: 0 0 8px var(--glow-color);
+        }
+
+        .counter-label {
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         @keyframes blink {
@@ -130,195 +234,221 @@
             100% { opacity: 0.3; }
         }
 
-        @media (max-width: 600px) {
-            .age-tile {
-                padding: 15px;
+        @media (max-width: 768px) {
+            .title {
+                font-size: 24px;
             }
             
-            .tile-title {
-                font-size: 18px;
+            .age-tile {
+                padding: 20px;
+            }
+            
+            .age-display {
+                font-size: 16px;
+                line-height: 2;
+                padding: 20px 15px;
+            }
+            
+            .counter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 20px;
             }
             
             .age-display {
                 font-size: 14px;
-                line-height: 1.6;
+                line-height: 1.8;
             }
             
-            .age-value {
-                min-width: 30px;
+            .counter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .counter-value {
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="age-tile">
-        <div class="pixel-decoration pixel-top-left"></div>
-        <div class="pixel-decoration pixel-top-right"></div>
-        <div class="pixel-decoration pixel-bottom-left"></div>
-        <div class="pixel-decoration pixel-bottom-right"></div>
-        
-        <div class="tile-header">
-            <div class="tile-title">LIVELY YEARS TILE</div>
-            <div class="birthdate-display" id="birthdateDisplay">Loading birthdate...</div>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">PIXEL AGE COUNTER</h1>
+            <div class="subtitle">GitHub Pages Tile | Real-time Age Calculator</div>
         </div>
         
-        <div class="age-display">
-            <div id="ageOutput">I am <span class="age-value loading">--</span> years, 
-            <span class="age-value loading">--</span> months, 
-            <span class="age-value loading">--</span> days, 
-            <span class="age-value loading">--</span> hours, 
-            <span class="age-value loading">--</span> minutes, 
-            <span class="age-value loading">--</span> seconds old</div>
+        <div class="age-tile">
+            <div class="pixel-decoration pixel-top-left"></div>
+            <div class="pixel-decoration pixel-top-right"></div>
+            <div class="pixel-decoration pixel-bottom-left"></div>
+            <div class="pixel-decoration pixel-bottom-right"></div>
+            <div class="pixel-grid"></div>
+            
+            <div class="birthdate-display" id="birthdateDisplay">
+                Loading birthdate from file...
+            </div>
+            
+            <div class="age-display">
+                <div id="ageOutput">
+                    I am <span class="age-value loading">--</span> years, 
+                    <span class="age-value loading">--</span> months, 
+                    <span class="age-value loading">--</span> days old
+                </div>
+                
+                <div class="counter-grid">
+                    <div class="counter-cell">
+                        <div class="counter-value" id="hours">--</div>
+                        <div class="counter-label">Hours</div>
+                    </div>
+                    <div class="counter-cell">
+                        <div class="counter-value" id="minutes">--</div>
+                        <div class="counter-label">Minutes</div>
+                    </div>
+                    <div class="counter-cell">
+                        <div class="counter-value" id="seconds">--</div>
+                        <div class="counter-label">Seconds</div>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="tile-footer">
-            Fork this project to display your age on GitHub Pages
+        <div class="instructions">
+            <h3>How to Use This Age Counter</h3>
+            <ul>
+                <li>Fork this repository to your GitHub account</li>
+                <li>Create a file named <code>birthdate.txt</code> in the repository root</li>
+                <li>Add your birthdate in the format <code>DD/MM/YYYY</code></li>
+                <li>Enable GitHub Pages for your repository</li>
+                <li>Add this to your profile README:<br>
+                    <code>[![My Age](https://yourusername.github.io/repo-name)](https://github.com/yourusername/repo-name)</code>
+                </li>
+            </ul>
+            <p>Note: Months and days can be single or double-digit (e.g. 5 or 05 for May)</p>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ageOutput = document.getElementById('ageOutput');
             const birthdateDisplay = document.getElementById('birthdateDisplay');
-            const ageValues = document.querySelectorAll('.age-value');
-            
-            // Parse birthdate from URL path
-            function parseBirthdateFromPath() {
-                const path = window.location.pathname;
-                // Extract date parts from path like /22/05/2006
-                const dateParts = path.split('/').filter(part => part !== '');
-                
-                // We need at least 3 parts (dd, mm, yyyy)
-                if (dateParts.length >= 3) {
-                    const day = parseInt(dateParts[dateParts.length - 3]);
-                    const month = parseInt(dateParts[dateParts.length - 2]);
-                    const year = parseInt(dateParts[dateParts.length - 1]);
-                    
-                    return { day, month, year };
-                }
-                return null;
-            }
-            
-            // Validate and format birthdate
-            function validateAndFormatBirthdate(day, month, year) {
-                // Basic validation
-                if (isNaN(day) return null;
-                if (isNaN(month)) return null;
-                if (isNaN(year)) return null;
-                if (day < 1 || day > 31) return null;
-                if (month < 1 || month > 12) return null;
-                if (year < 1900 || year > new Date().getFullYear()) return null;
-                
-                // Create date object (months are 0-indexed in JS)
-                const birthdate = new Date(year, month - 1, day);
-                
-                // Validate if the date is valid
-                if (birthdate.getDate() !== day) return null;
-                if (birthdate.getMonth() !== month - 1) return null;
-                if (birthdate.getFullYear() !== year) return null;
-                
-                return birthdate;
-            }
-            
-            // Initialize with parsed date
-            const dateParts = parseBirthdateFromPath();
-            let birthdate = null;
-            
-            if (dateParts) {
-                birthdate = validateAndFormatBirthdate(
-                    dateParts.day, 
-                    dateParts.month, 
-                    dateParts.year
-                );
-            }
-            
-            if (birthdate) {
-                // Format date for display
-                const formattedDate = birthdate.toLocaleDateString('en-GB', {
-                    day: '2-digit', 
-                    month: 'short', 
-                    year: 'numeric'
-                });
-                
-                birthdateDisplay.textContent = `Birthdate: ${formattedDate}`;
-            } else {
-                birthdateDisplay.textContent = 'Invalid date format';
-                ageOutput.innerHTML = `
-                    <div class="error">
-                        Please use URL format: /dd/mm/yyyy<br>
-                        Example: /22/5/2006<br><br>
-                        Your current path is: ${window.location.pathname}
-                    </div>
-                `;
-            }
-        });
-        
-        function calculateAge(birthdate) {
-            if (!birthdate) return null;
-            
-            const now = new Date();
-            let years = now.getFullYear() - birthdate.getFullYear();
-            let months = now.getMonth() - birthdate.getMonth();
-            let days = now.getDate() - birthdate.getDate();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
-            
-            // Adjust for negative days
-            if (days < 0) {
-                months--;
-                // Get days in previous month
-                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                days += prevMonth.getDate();
-            }
-            
-            // Adjust for negative months
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-            
-            return { years, months, days, hours, minutes, seconds };
-        }
-        
-        function updateAgeDisplay() {
             const ageOutput = document.getElementById('ageOutput');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
             const ageValues = document.querySelectorAll('.age-value');
             
-            // Re-parse birthdate each time to handle potential URL changes
-            const dateParts = parseBirthdateFromPath();
-            let birthdate = null;
-            
-            if (dateParts) {
-                birthdate = validateAndFormatBirthdate(
-                    dateParts.day, 
-                    dateParts.month, 
-                    dateParts.year
-                );
+            // Fetch birthdate from text file
+            async function fetchBirthdate() {
+                try {
+                    const response = await fetch('birthdate.txt');
+                    if (!response.ok) throw new Error('File not found');
+                    
+                    const dateStr = await response.text();
+                    const [day, month, year] = dateStr.trim().split('/').map(Number);
+                    
+                    // Validate date
+                    if (!day || !month || !year) throw new Error('Invalid date format');
+                    if (day < 1 || day > 31) throw new Error('Invalid day');
+                    if (month < 1 || month > 12) throw new Error('Invalid month');
+                    if (year < 1900 || year > new Date().getFullYear()) throw new Error('Invalid year');
+                    
+                    const birthdate = new Date(year, month - 1, day);
+                    
+                    // Additional validation
+                    if (birthdate.getDate() !== day || 
+                        birthdate.getMonth() !== month - 1 || 
+                        birthdate.getFullYear() !== year) {
+                        throw new Error('Invalid date');
+                    }
+                    
+                    // Format for display
+                    const formattedDate = birthdate.toLocaleDateString('en-GB', {
+                        day: '2-digit', 
+                        month: 'short', 
+                        year: 'numeric'
+                    });
+                    
+                    birthdateDisplay.textContent = `Birthdate: ${formattedDate}`;
+                    return birthdate;
+                    
+                } catch (error) {
+                    console.error(error);
+                    birthdateDisplay.textContent = 'Error loading birthdate.txt';
+                    ageOutput.innerHTML = `
+                        <div class="error">
+                            ${error.message || 'Error loading birthdate'}<br><br>
+                            Please create a file named <code>birthdate.txt</code> in the format:<br>
+                            <code>DD/MM/YYYY</code><br><br>
+                            Example: <code>22/5/2006</code> or <code>22/05/2006</code>
+                        </div>
+                    `;
+                    return null;
+                }
             }
             
-            if (birthdate) {
+            function calculateAge(birthdate) {
+                if (!birthdate) return null;
+                
+                const now = new Date();
+                let years = now.getFullYear() - birthdate.getFullYear();
+                let months = now.getMonth() - birthdate.getMonth();
+                let days = now.getDate() - birthdate.getDate();
+                
+                // Adjust for negative days
+                if (days < 0) {
+                    months--;
+                    // Get days in previous month
+                    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                    days += prevMonth.getDate();
+                }
+                
+                // Adjust for negative months
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                
+                return { 
+                    years, 
+                    months, 
+                    days,
+                    hours: now.getHours(),
+                    minutes: now.getMinutes(),
+                    seconds: now.getSeconds()
+                };
+            }
+            
+            function updateAgeDisplay(birthdate) {
+                if (!birthdate) return;
+                
                 const age = calculateAge(birthdate);
                 
-                if (age && ageValues.length === 6) {
+                if (age && ageValues.length >= 3) {
                     ageValues[0].textContent = age.years;
                     ageValues[1].textContent = age.months;
                     ageValues[2].textContent = age.days;
-                    ageValues[3].textContent = age.hours;
-                    ageValues[4].textContent = age.minutes;
-                    ageValues[5].textContent = age.seconds;
+                    
+                    hoursEl.textContent = age.hours.toString().padStart(2, '0');
+                    minutesEl.textContent = age.minutes.toString().padStart(2, '0');
+                    secondsEl.textContent = age.seconds.toString().padStart(2, '0');
                     
                     // Remove loading animation
                     ageValues.forEach(el => el.classList.remove('loading'));
                 }
             }
-        }
-        
-        // Initial update
-        updateAgeDisplay();
-        
-        // Update every second
-        setInterval(updateAgeDisplay, 1000);
+            
+            // Initialize and start updating
+            fetchBirthdate().then(birthdate => {
+                // Initial update
+                updateAgeDisplay(birthdate);
+                
+                // Update every second
+                setInterval(() => updateAgeDisplay(birthdate), 1000);
+            });
+        });
     </script>
 </body>
 </html>
