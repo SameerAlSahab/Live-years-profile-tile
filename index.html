@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi! Iam </title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --highlight: #58a6ff;
+            --border-color: #30363d;
+            --pixel-size: 4px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Press Start 2P', system-ui, sans-serif;
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .age-tile {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(1, 4, 9, 0.5);
+            padding: 25px;
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .age-tile::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff7b72, #d2a8ff, #79c0ff, #a5d6ff);
+            z-index: 10;
+        }
+
+        .tile-header {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .tile-title {
+            font-size: 22px;
+            color: var(--highlight);
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+        }
+
+        .birthdate-display {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .age-display {
+            font-size: 18px;
+            line-height: 1.8;
+            padding: 20px 15px;
+            background: rgba(22, 27, 34, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .age-value {
+            color: var(--highlight);
+            display: inline-block;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .tile-footer {
+            margin-top: 25px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .pixel-decoration {
+            position: absolute;
+            width: var(--pixel-size);
+            height: var(--pixel-size);
+            background-color: var(--highlight);
+        }
+
+        .pixel-top-left { top: 15px; left: 15px; }
+        .pixel-top-right { top: 15px; right: 15px; }
+        .pixel-bottom-left { bottom: 15px; left: 15px; }
+        .pixel-bottom-right { bottom: 15px; right: 15px; }
+
+        .loading {
+            animation: blink 1.5s infinite;
+        }
+
+        .error {
+            color: #ff7b72;
+            background: rgba(255, 123, 114, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        @media (max-width: 600px) {
+            .age-tile {
+                padding: 15px;
+            }
+            
+            .tile-title {
+                font-size: 18px;
+            }
+            
+            .age-display {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            
+            .age-value {
+                min-width: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="age-tile">
+        <div class="pixel-decoration pixel-top-left"></div>
+        <div class="pixel-decoration pixel-top-right"></div>
+        <div class="pixel-decoration pixel-bottom-left"></div>
+        <div class="pixel-decoration pixel-bottom-right"></div>
+        
+        <div class="tile-header">
+            <div class="tile-title">GITHUB AGE COUNTER</div>
+            <div class="birthdate-display" id="birthdateDisplay">Loading birthdate...</div>
+        </div>
+        
+        <div class="age-display">
+            <div id="ageOutput">I am <span class="age-value loading">--</span> years, 
+            <span class="age-value loading">--</span> months, 
+            <span class="age-value loading">--</span> days, 
+            <span class="age-value loading">--</span> hours, 
+            <span class="age-value loading">--</span> minutes, 
+            <span class="age-value loading">--</span> seconds old</div>
+        </div>
+        
+        <div class="tile-footer">
+            Fork this project to display your age on GitHub Pages
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ageOutput = document.getElementById('ageOutput');
+            const birthdateDisplay = document.getElementById('birthdateDisplay');
+            const ageValues = document.querySelectorAll('.age-value');
+            
+            // Parse birthdate from URL path
+            const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
+            let birthdate = null;
+            
+            // Check if we have at least 3 segments (dd/mm/yyyy)
+            if (pathSegments.length >= 3) {
+                const day = parseInt(pathSegments[pathSegments.length - 3], 10);
+                const month = parseInt(pathSegments[pathSegments.length - 2], 10);
+                const year = parseInt(pathSegments[pathSegments.length - 1], 10);
+                
+                // Validate date
+                if (!isNaN(day) && !isNaN(month) && !isNaN(year) && 
+                    day >= 1 && day <= 31 && 
+                    month >= 1 && month <= 12 && 
+                    year >= 1900 && year <= new Date().getFullYear()) {
+                    
+                    // Create date object (months are 0-indexed in JS)
+                    birthdate = new Date(year, month - 1, day);
+                    
+                    // Check if date is valid
+                    if (birthdate.getDate() === day && 
+                        birthdate.getMonth() === month - 1 && 
+                        birthdate.getFullYear() === year) {
+                        
+                        // Format date for display
+                        const formattedDate = birthdate.toLocaleDateString('en-GB', {
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: 'numeric'
+                        });
+                        
+                        birthdateDisplay.textContent = `Birthdate: ${formattedDate}`;
+                        return;
+                    }
+                }
+            }
+            
+            // If we get here, the date is invalid
+            birthdateDisplay.textContent = 'Invalid date format';
+            ageOutput.innerHTML = '<div class="error">Please use URL format: /dd/mm/yyyy<br>Example: /22/5/2006</div>';
+        });
+        
+        function calculateAge(birthdate) {
+            const now = new Date();
+            let years = now.getFullYear() - birthdate.getFullYear();
+            let months = now.getMonth() - birthdate.getMonth();
+            let days = now.getDate() - birthdate.getDate();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            
+            // Adjust for negative days/months
+            if (days < 0) {
+                months--;
+                // Get days in previous month
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            return { years, months, days, hours, minutes, seconds };
+        }
+        
+        function updateAgeDisplay() {
+            const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
+            
+            if (pathSegments.length >= 3) {
+                const day = parseInt(pathSegments[pathSegments.length - 3], 10);
+                const month = parseInt(pathSegments[pathSegments.length - 2], 10);
+                const year = parseInt(pathSegments[pathSegments.length - 1], 10);
+                
+                if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                    const birthdate = new Date(year, month - 1, day);
+                    
+                    // Only proceed if we have a valid date
+                    if (birthdate.getDate() === day && 
+                        birthdate.getMonth() === month - 1 && 
+                        birthdate.getFullYear() === year) {
+                        
+                        const age = calculateAge(birthdate);
+                        const ageValues = document.querySelectorAll('.age-value');
+                        
+                        if (ageValues.length === 6) {
+                            ageValues[0].textContent = age.years;
+                            ageValues[1].textContent = age.months;
+                            ageValues[2].textContent = age.days;
+                            ageValues[3].textContent = age.hours;
+                            ageValues[4].textContent = age.minutes;
+                            ageValues[5].textContent = age.seconds;
+                            
+                            // Remove loading animation
+                            ageValues.forEach(el => el.classList.remove('loading'));
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        
+        // Initial update
+        updateAgeDisplay();
+        
+        // Update every second
+        setInterval(updateAgeDisplay, 1000);
+    </script>
+</body>
+</html>
