@@ -3,190 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Pixel Age Counter</title>
+    <title>Lively Age Counter         @Sameer Al Sahab @2025</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --text-color: #c9d1d9;
-            --highlight: #58a6ff;
-            --border-color: #30363d;
-            --pixel-size: 4px;
-            --glow-color: rgba(88, 166, 255, 0.3);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #0d1117, #161b22);
             font-family: 'Press Start 2P', system-ui, sans-serif;
-            color: var(--text-color);
+            color: #c9d1d9;
             padding: 20px;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(88, 166, 255, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(210, 168, 255, 0.05) 0%, transparent 20%);
+            overflow-x: hidden;
         }
-
+        
         .container {
             max-width: 800px;
             width: 100%;
             text-align: center;
         }
-
+        
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             position: relative;
+            z-index: 10;
         }
-
+        
         .title {
-            font-size: 32px;
-            color: var(--highlight);
-            text-shadow: 0 0 10px var(--glow-color);
+            font-size: 42px;
+            color: #58a6ff;
+            text-shadow: 0 0 15px rgba(88, 166, 255, 0.7);
             margin-bottom: 15px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
             display: inline-block;
         }
-
+        
         .title::after {
             content: "";
             position: absolute;
-            bottom: -10px;
+            bottom: -15px;
             left: 10%;
             width: 80%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--highlight), transparent);
+            height: 5px;
+            background: linear-gradient(90deg, transparent, #ff7b72, #d2a8ff, #79c0ff, transparent);
         }
-
+        
         .subtitle {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-top: 10px;
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 25px;
             color: #79c0ff;
+            text-shadow: 0 0 8px rgba(121, 192, 255, 0.4);
         }
-
+        
         .age-tile {
-            background-color: var(--card-bg);
-            border: 3px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(1, 4, 9, 0.6);
-            padding: 30px;
-            margin: 0 auto 30px;
+            background: rgba(22, 27, 34, 0.85);
+            border: 4px solid #30363d;
+            border-radius: 12px;
+            box-shadow: 
+                0 0 30px rgba(88, 166, 255, 0.2),
+                0 10px 50px rgba(1, 4, 9, 0.8);
+            padding: 40px 30px;
+            margin: 0 auto 40px;
             position: relative;
             overflow: hidden;
-            max-width: 600px;
+            max-width: 700px;
+            backdrop-filter: blur(5px);
         }
-
+        
         .age-tile::before {
             content: "";
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 6px;
             background: linear-gradient(90deg, #ff7b72, #d2a8ff, #79c0ff, #a5d6ff);
             z-index: 10;
         }
-
+        
+        .birthdate-display {
+            font-size: 18px;
+            color: #d2a8ff;
+            margin: 15px 0 30px;
+            padding: 12px 20px;
+            background: rgba(13, 17, 23, 0.4);
+            border-radius: 8px;
+            display: inline-block;
+            border: 1px solid #3c444e;
+            text-shadow: 0 0 5px rgba(210, 168, 255, 0.4);
+        }
+        
         .age-display {
-            font-size: 20px;
+            font-size: 22px;
             line-height: 2.2;
-            padding: 30px 20px;
-            background: rgba(13, 17, 23, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin: 25px 0;
+            padding: 30px;
+            background: rgba(13, 17, 23, 0.3);
+            border: 2px solid #3c444e;
+            border-radius: 10px;
+            margin: 30px 0;
             position: relative;
             text-shadow: 0 0 5px rgba(201, 209, 217, 0.2);
+            background-image: 
+                linear-gradient(rgba(88, 166, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(88, 166, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-
+        
         .age-value {
-            color: var(--highlight);
+            color: #79c0ff;
             display: inline-block;
-            min-width: 50px;
+            min-width: 60px;
             text-align: center;
-            text-shadow: 0 0 8px var(--glow-color);
+            text-shadow: 0 0 10px rgba(121, 192, 255, 0.6);
             position: relative;
             z-index: 2;
+            font-weight: bold;
         }
-
-        .birthdate-display {
-            font-size: 16px;
-            color: #79c0ff;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(22, 27, 34, 0.7);
-            border-radius: 6px;
-            display: inline-block;
-        }
-
+        
         .pixel-decoration {
             position: absolute;
-            width: var(--pixel-size);
-            height: var(--pixel-size);
-            background-color: var(--highlight);
-            box-shadow: 0 0 5px var(--glow-color);
+            width: 8px;
+            height: 8px;
+            background-color: #58a6ff;
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.7);
             z-index: 1;
         }
-
-        .pixel-top-left { top: 20px; left: 20px; }
-        .pixel-top-right { top: 20px; right: 20px; }
-        .pixel-bottom-left { bottom: 20px; left: 20px; }
-        .pixel-bottom-right { bottom: 20px; right: 20px; }
-
+        
+        .pixel-top-left { top: 25px; left: 25px; }
+        .pixel-top-right { top: 25px; right: 25px; }
+        .pixel-bottom-left { bottom: 25px; left: 25px; }
+        .pixel-bottom-right { bottom: 25px; right: 25px; }
+        
         .loading {
             animation: blink 1.5s infinite;
         }
-
+        
         .error {
             color: #ff7b72;
-            background: rgba(255, 123, 114, 0.1);
-            padding: 20px;
-            border-radius: 8px;
-            margin: 30px 0;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .instructions {
-            background: rgba(22, 27, 34, 0.7);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            background: rgba(255, 123, 114, 0.15);
             padding: 25px;
-            margin-top: 30px;
-            font-size: 14px;
+            border-radius: 10px;
+            margin: 30px 0;
+            font-size: 18px;
+            line-height: 1.8;
+            border: 1px solid rgba(255, 123, 114, 0.3);
+        }
+        
+        .instructions {
+            background: rgba(22, 27, 34, 0.8);
+            border: 2px solid #3c444e;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            font-size: 16px;
             text-align: left;
             line-height: 1.8;
         }
-
+        
         .instructions h3 {
-            color: var(--highlight);
-            margin-bottom: 15px;
-            font-size: 18px;
+            color: #58a6ff;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(88, 166, 255, 0.4);
         }
-
+        
         .instructions code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 6px;
-            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 8px;
+            border-radius: 6px;
             display: inline-block;
-            margin: 2px 0;
+            margin: 4px 0;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: #79c0ff;
+            border: 1px solid #3c444e;
         }
-
+        
         .instructions ul {
-            padding-left: 20px;
-            margin: 15px 0;
+            padding-left: 30px;
+            margin: 20px 0;
         }
-
+        
+        .instructions li {
+            margin-bottom: 15px;
+        }
+        
         .pixel-grid {
             position: absolute;
             top: 0;
@@ -199,77 +210,128 @@
             background-size: 20px 20px;
             z-index: 0;
         }
-
-        .counter-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
-
-        .counter-cell {
-            background: rgba(22, 27, 34, 0.8);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 15px;
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #79c0ff;
+            border-radius: 50%;
+            animation: float 10s infinite linear;
+            opacity: 0.3;
         }
-
-        .counter-value {
-            font-size: 28px;
-            color: var(--highlight);
-            margin: 10px 0;
-            text-shadow: 0 0 8px var(--glow-color);
-        }
-
-        .counter-label {
-            font-size: 12px;
-            color: #8b949e;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
+        
         @keyframes blink {
             0% { opacity: 0.3; }
             50% { opacity: 1; }
             100% { opacity: 0.3; }
         }
-
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+        
+        .github-tile {
+            background: rgba(22, 27, 34, 0.9);
+            border: 2px solid #30363d;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .github-tile::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff7b72, #d2a8ff, #79c0ff, #a5d6ff);
+            z-index: 10;
+        }
+        
+        .tile-title {
+            font-size: 18px;
+            color: #58a6ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tile-content {
+            font-size: 22px;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        
+        .tile-age {
+            color: #79c0ff;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(121, 192, 255, 0.5);
+        }
+        
+        .tile-footer {
+            font-size: 12px;
+            color: #8b949e;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .title {
-                font-size: 24px;
+                font-size: 32px;
             }
             
             .age-tile {
-                padding: 20px;
+                padding: 30px 20px;
             }
             
             .age-display {
-                font-size: 16px;
+                font-size: 18px;
                 line-height: 2;
                 padding: 20px 15px;
             }
             
-            .counter-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .instructions {
+                padding: 25px 20px;
             }
         }
 
         @media (max-width: 480px) {
             .title {
-                font-size: 20px;
+                font-size: 24px;
             }
             
             .age-display {
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 1.8;
             }
             
-            .counter-grid {
-                grid-template-columns: 1fr;
+            .age-value {
+                min-width: 40px;
             }
             
-            .counter-value {
-                font-size: 24px;
+            .instructions {
+                font-size: 14px;
+            }
+            
+            .instructions code {
+                font-size: 12px;
             }
         }
     </style>
@@ -278,7 +340,7 @@
     <div class="container">
         <div class="header">
             <h1 class="title">PIXEL AGE COUNTER</h1>
-            <div class="subtitle">GitHub Pages Tile | Real-time Age Calculator</div>
+            <div class="subtitle">Real-Time GitHub Tile | Embeddable in READMEs</div>
         </div>
         
         <div class="age-tile">
@@ -287,6 +349,7 @@
             <div class="pixel-decoration pixel-bottom-left"></div>
             <div class="pixel-decoration pixel-bottom-right"></div>
             <div class="pixel-grid"></div>
+            <div class="particles" id="particles"></div>
             
             <div class="birthdate-display" id="birthdateDisplay">
                 Loading birthdate from file...
@@ -296,38 +359,53 @@
                 <div id="ageOutput">
                     I am <span class="age-value loading">--</span> years, 
                     <span class="age-value loading">--</span> months, 
-                    <span class="age-value loading">--</span> days old
-                </div>
-                
-                <div class="counter-grid">
-                    <div class="counter-cell">
-                        <div class="counter-value" id="hours">--</div>
-                        <div class="counter-label">Hours</div>
-                    </div>
-                    <div class="counter-cell">
-                        <div class="counter-value" id="minutes">--</div>
-                        <div class="counter-label">Minutes</div>
-                    </div>
-                    <div class="counter-cell">
-                        <div class="counter-value" id="seconds">--</div>
-                        <div class="counter-label">Seconds</div>
-                    </div>
+                    <span class="age-value loading">--</span> days, 
+                    <span class="age-value loading">--</span> hours, 
+                    <span class="age-value loading">--</span> minutes, 
+                    <span class="age-value loading">--</span> seconds old
                 </div>
             </div>
         </div>
         
+        <div class="github-tile">
+            <div class="tile-title">GitHub README Embed Preview</div>
+            <div class="tile-content">
+                I am <span class="tile-age" id="tileYears">--</span> years,
+                <span class="tile-age" id="tileMonths">--</span> months,
+                <span class="tile-age" id="tileDays">--</span> days old
+            </div>
+            <div class="tile-footer">Updated: <span id="updateTime">Just now</span></div>
+        </div>
+        
         <div class="instructions">
-            <h3>How to Use This Age Counter</h3>
-            <ul>
+            <h3>How to Embed as a Real-Time Tile in GitHub README</h3>
+            
+            <p>To embed this as a dynamic tile in your GitHub README:</p>
+            
+            <ol>
                 <li>Fork this repository to your GitHub account</li>
-                <li>Create a file named <code>birthdate.txt</code> in the repository root</li>
-                <li>Add your birthdate in the format <code>DD/MM/YYYY</code></li>
+                <li>Create a <code>birthdate.txt</code> file in the root directory with your birthdate in DD/MM/YYYY format</li>
                 <li>Enable GitHub Pages for your repository</li>
-                <li>Add this to your profile README:<br>
-                    <code>[![My Age](https://yourusername.github.io/repo-name)](https://github.com/yourusername/repo-name)</code>
-                </li>
-            </ul>
-            <p>Note: Months and days can be single or double-digit (e.g. 5 or 05 for May)</p>
+                <li>Add this to your README.md file:</li>
+            </ol>
+            
+            <pre><code>[![My Age](https://yourusername.github.io/repo-name/index.html)](https://github.com/yourusername/repo-name)</code></pre>
+            
+            <p>For a real-time updating tile that works like GitHub stats cards:</p>
+            
+            <pre><code>&lt;a href="https://github.com/yourusername"&gt;
+  &lt;img src="https://yourusername.github.io/repo-name/index.html" alt="My Age" width="600" height="200" /&gt;
+&lt;/a&gt;</code></pre>
+            
+            <p>Note: GitHub READMEs don't support JavaScript in iframes, but you can use server-side rendering or:</p>
+            
+            <h4>Alternative: Use Shields.io Dynamic Badge</h4>
+            
+            <p>Create a custom badge with Shields.io:</p>
+            
+            <pre><code>![Age](https://img.shields.io/badge/dynamic/json?url=https://yourusername.github.io/repo-name/age.json&label=Age&query=age_text&color=blueviolet&style=for-the-badge)</code></pre>
+            
+            <p>You'll need to create an <code>age.json</code> file that updates with your current age.</p>
         </div>
     </div>
 
@@ -335,10 +413,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             const birthdateDisplay = document.getElementById('birthdateDisplay');
             const ageOutput = document.getElementById('ageOutput');
-            const hoursEl = document.getElementById('hours');
-            const minutesEl = document.getElementById('minutes');
-            const secondsEl = document.getElementById('seconds');
             const ageValues = document.querySelectorAll('.age-value');
+            const particlesContainer = document.getElementById('particles');
+            const tileYears = document.getElementById('tileYears');
+            const tileMonths = document.getElementById('tileMonths');
+            const tileDays = document.getElementById('tileDays');
+            const updateTime = document.getElementById('updateTime');
+            
+            // Create floating particles
+            function createParticles() {
+                const particleCount = 30;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    particle.style.animationDelay = `${Math.random() * 10}s`;
+                    particle.style.width = `${Math.random() * 3 + 1}px`;
+                    particle.style.height = particle.style.width;
+                    particlesContainer.appendChild(particle);
+                }
+            }
+            
+            createParticles();
             
             // Fetch birthdate from text file
             async function fetchBirthdate() {
@@ -396,6 +493,9 @@
                 let years = now.getFullYear() - birthdate.getFullYear();
                 let months = now.getMonth() - birthdate.getMonth();
                 let days = now.getDate() - birthdate.getDate();
+                let hours = now.getHours();
+                let minutes = now.getMinutes();
+                let seconds = now.getSeconds();
                 
                 // Adjust for negative days
                 if (days < 0) {
@@ -411,14 +511,7 @@
                     months += 12;
                 }
                 
-                return { 
-                    years, 
-                    months, 
-                    days,
-                    hours: now.getHours(),
-                    minutes: now.getMinutes(),
-                    seconds: now.getSeconds()
-                };
+                return { years, months, days, hours, minutes, seconds };
             }
             
             function updateAgeDisplay(birthdate) {
@@ -426,14 +519,26 @@
                 
                 const age = calculateAge(birthdate);
                 
-                if (age && ageValues.length >= 3) {
+                if (age && ageValues.length === 6) {
                     ageValues[0].textContent = age.years;
                     ageValues[1].textContent = age.months;
                     ageValues[2].textContent = age.days;
+                    ageValues[3].textContent = age.hours.toString().padStart(2, '0');
+                    ageValues[4].textContent = age.minutes.toString().padStart(2, '0');
+                    ageValues[5].textContent = age.seconds.toString().padStart(2, '0');
                     
-                    hoursEl.textContent = age.hours.toString().padStart(2, '0');
-                    minutesEl.textContent = age.minutes.toString().padStart(2, '0');
-                    secondsEl.textContent = age.seconds.toString().padStart(2, '0');
+                    // Update GitHub tile preview
+                    tileYears.textContent = age.years;
+                    tileMonths.textContent = age.months;
+                    tileDays.textContent = age.days;
+                    
+                    // Update time
+                    const now = new Date();
+                    updateTime.textContent = now.toLocaleTimeString('en-US', {
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
                     
                     // Remove loading animation
                     ageValues.forEach(el => el.classList.remove('loading'));
