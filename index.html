@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi! Iam </title>
+    <title>GitHub Age Counter Tile</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -120,6 +120,8 @@
             padding: 15px;
             border-radius: 8px;
             margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         @keyframes blink {
@@ -156,7 +158,7 @@
         <div class="pixel-decoration pixel-bottom-right"></div>
         
         <div class="tile-header">
-            <div class="tile-title">GITHUB AGE COUNTER</div>
+            <div class="tile-title">LIVELY YEARS TILE</div>
             <div class="birthdate-display" id="birthdateDisplay">Loading birthdate...</div>
         </div>
         
@@ -181,48 +183,79 @@
             const ageValues = document.querySelectorAll('.age-value');
             
             // Parse birthdate from URL path
-            const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
-            let birthdate = null;
-            
-            // Check if we have at least 3 segments (dd/mm/yyyy)
-            if (pathSegments.length >= 3) {
-                const day = parseInt(pathSegments[pathSegments.length - 3], 10);
-                const month = parseInt(pathSegments[pathSegments.length - 2], 10);
-                const year = parseInt(pathSegments[pathSegments.length - 1], 10);
+            function parseBirthdateFromPath() {
+                const path = window.location.pathname;
+                // Extract date parts from path like /22/05/2006
+                const dateParts = path.split('/').filter(part => part !== '');
                 
-                // Validate date
-                if (!isNaN(day) && !isNaN(month) && !isNaN(year) && 
-                    day >= 1 && day <= 31 && 
-                    month >= 1 && month <= 12 && 
-                    year >= 1900 && year <= new Date().getFullYear()) {
+                // We need at least 3 parts (dd, mm, yyyy)
+                if (dateParts.length >= 3) {
+                    const day = parseInt(dateParts[dateParts.length - 3]);
+                    const month = parseInt(dateParts[dateParts.length - 2]);
+                    const year = parseInt(dateParts[dateParts.length - 1]);
                     
-                    // Create date object (months are 0-indexed in JS)
-                    birthdate = new Date(year, month - 1, day);
-                    
-                    // Check if date is valid
-                    if (birthdate.getDate() === day && 
-                        birthdate.getMonth() === month - 1 && 
-                        birthdate.getFullYear() === year) {
-                        
-                        // Format date for display
-                        const formattedDate = birthdate.toLocaleDateString('en-GB', {
-                            day: '2-digit', 
-                            month: 'short', 
-                            year: 'numeric'
-                        });
-                        
-                        birthdateDisplay.textContent = `Birthdate: ${formattedDate}`;
-                        return;
-                    }
+                    return { day, month, year };
                 }
+                return null;
             }
             
-            // If we get here, the date is invalid
-            birthdateDisplay.textContent = 'Invalid date format';
-            ageOutput.innerHTML = '<div class="error">Please use URL format: /dd/mm/yyyy<br>Example: /22/5/2006</div>';
+            // Validate and format birthdate
+            function validateAndFormatBirthdate(day, month, year) {
+                // Basic validation
+                if (isNaN(day) return null;
+                if (isNaN(month)) return null;
+                if (isNaN(year)) return null;
+                if (day < 1 || day > 31) return null;
+                if (month < 1 || month > 12) return null;
+                if (year < 1900 || year > new Date().getFullYear()) return null;
+                
+                // Create date object (months are 0-indexed in JS)
+                const birthdate = new Date(year, month - 1, day);
+                
+                // Validate if the date is valid
+                if (birthdate.getDate() !== day) return null;
+                if (birthdate.getMonth() !== month - 1) return null;
+                if (birthdate.getFullYear() !== year) return null;
+                
+                return birthdate;
+            }
+            
+            // Initialize with parsed date
+            const dateParts = parseBirthdateFromPath();
+            let birthdate = null;
+            
+            if (dateParts) {
+                birthdate = validateAndFormatBirthdate(
+                    dateParts.day, 
+                    dateParts.month, 
+                    dateParts.year
+                );
+            }
+            
+            if (birthdate) {
+                // Format date for display
+                const formattedDate = birthdate.toLocaleDateString('en-GB', {
+                    day: '2-digit', 
+                    month: 'short', 
+                    year: 'numeric'
+                });
+                
+                birthdateDisplay.textContent = `Birthdate: ${formattedDate}`;
+            } else {
+                birthdateDisplay.textContent = 'Invalid date format';
+                ageOutput.innerHTML = `
+                    <div class="error">
+                        Please use URL format: /dd/mm/yyyy<br>
+                        Example: /22/5/2006<br><br>
+                        Your current path is: ${window.location.pathname}
+                    </div>
+                `;
+            }
         });
         
         function calculateAge(birthdate) {
+            if (!birthdate) return null;
+            
             const now = new Date();
             let years = now.getFullYear() - birthdate.getFullYear();
             let months = now.getMonth() - birthdate.getMonth();
@@ -231,7 +264,7 @@
             let minutes = now.getMinutes();
             let seconds = now.getSeconds();
             
-            // Adjust for negative days/months
+            // Adjust for negative days
             if (days < 0) {
                 months--;
                 // Get days in previous month
@@ -239,6 +272,7 @@
                 days += prevMonth.getDate();
             }
             
+            // Adjust for negative months
             if (months < 0) {
                 years--;
                 months += 12;
@@ -248,37 +282,34 @@
         }
         
         function updateAgeDisplay() {
-            const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
+            const ageOutput = document.getElementById('ageOutput');
+            const ageValues = document.querySelectorAll('.age-value');
             
-            if (pathSegments.length >= 3) {
-                const day = parseInt(pathSegments[pathSegments.length - 3], 10);
-                const month = parseInt(pathSegments[pathSegments.length - 2], 10);
-                const year = parseInt(pathSegments[pathSegments.length - 1], 10);
+            // Re-parse birthdate each time to handle potential URL changes
+            const dateParts = parseBirthdateFromPath();
+            let birthdate = null;
+            
+            if (dateParts) {
+                birthdate = validateAndFormatBirthdate(
+                    dateParts.day, 
+                    dateParts.month, 
+                    dateParts.year
+                );
+            }
+            
+            if (birthdate) {
+                const age = calculateAge(birthdate);
                 
-                if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-                    const birthdate = new Date(year, month - 1, day);
+                if (age && ageValues.length === 6) {
+                    ageValues[0].textContent = age.years;
+                    ageValues[1].textContent = age.months;
+                    ageValues[2].textContent = age.days;
+                    ageValues[3].textContent = age.hours;
+                    ageValues[4].textContent = age.minutes;
+                    ageValues[5].textContent = age.seconds;
                     
-                    // Only proceed if we have a valid date
-                    if (birthdate.getDate() === day && 
-                        birthdate.getMonth() === month - 1 && 
-                        birthdate.getFullYear() === year) {
-                        
-                        const age = calculateAge(birthdate);
-                        const ageValues = document.querySelectorAll('.age-value');
-                        
-                        if (ageValues.length === 6) {
-                            ageValues[0].textContent = age.years;
-                            ageValues[1].textContent = age.months;
-                            ageValues[2].textContent = age.days;
-                            ageValues[3].textContent = age.hours;
-                            ageValues[4].textContent = age.minutes;
-                            ageValues[5].textContent = age.seconds;
-                            
-                            // Remove loading animation
-                            ageValues.forEach(el => el.classList.remove('loading'));
-                        }
-                        return;
-                    }
+                    // Remove loading animation
+                    ageValues.forEach(el => el.classList.remove('loading'));
                 }
             }
         }
